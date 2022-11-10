@@ -825,6 +825,8 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 	var $ispre;
 	var $outerblocktags;
 	var $innerblocktags;
+    var $fixYOffset;
+    var $watermarkFontSize;
 
 	public $exposeVersion;
 
@@ -10598,7 +10600,11 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 		$opp = ((sin(deg2rad($angle))) * ($strlen / 2));
 
 		$wx = ($this->w / 2) - $adj + $offset / 3;
-		$wy = ($this->h / 2) + $opp;
+        if($this->fixYOffset != null ) {
+            $wy = $this->fixYOffset;
+        } else {
+            $wy = ($this->h / 2) + $opp;
+        }
 
 		$this->Rotate($angle, $wx, $wy);
 		$this->Text($wx, $wy, $texte, $OTLdata, $textvar);
@@ -13185,7 +13191,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 
 		/* -- WATERMARK -- */
 		if (($this->watermarkText) && ($this->showWatermarkText)) {
-			$this->watermark($this->watermarkText, $this->watermarkAngle, 120, $this->watermarkTextAlpha); // Watermark text
+			$this->watermark($this->watermarkText, $this->watermarkAngle, $this->watermarkFontSize, $this->watermarkTextAlpha); // Watermark text
 		}
 		if (($this->watermarkImage) && ($this->showWatermarkImage)) {
 			$this->watermarkImg($this->watermarkImage, $this->watermarkImageAlpha); // Watermark image
